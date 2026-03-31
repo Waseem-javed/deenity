@@ -17,6 +17,12 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
+      "permissions": [
+        "POST_NOTIFICATIONS",
+        "VIBRATE",
+        "SCHEDULE_EXACT_ALARM",
+        "ACCESS_NOTIFICATION_POLICY"
+      ],
       "predictiveBackGestureEnabled": false
     },
     "web": {
@@ -52,6 +58,12 @@
         "expo-location",
         {
           "locationWhenInUsePermission": "Allow Deenity to access your location for Qibla direction and accurate prayer times."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "defaultChannel": "prayer-alerts"
         }
       ]
     ],

@@ -1,6 +1,17 @@
-import { SafeAreaView } from "@/utils/index";
+import {
+    SafeAreaView,
+    cancelScheduledPrayerNotificationsAsync,
+    defaultAppSettings,
+    formatLocationLabel,
+    getCurrentLocationSnapshot,
+    loadAppSettings,
+    openAndroidDndSettingsAsync,
+    syncPrayerNotificationsAsync,
+    updateAppSettings,
+    type AppSettings,
+} from "@/utils/index";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView, Switch, Text, TouchableOpacity, View } from "react-native";
 
 type SettingRowProps = {
@@ -68,10 +79,81 @@ const SettingRow = ({
 };
 
 const Settings = () => {
-  const [prayerAlerts, setPrayerAlerts] = useState(true);
-  const [dailyReminders, setDailyReminders] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
-  const [biometricLock, setBiometricLock] = useState(true);
+  const [settings, setSettings] = useState<AppSettings>(defaultAppSettings);
+  const [locationLabel, setLocationLabel] = useState("Current location");
+  const [notificationStatus, setNotificationStatus] = useState(
+    "Prayer alerts will be scheduled for the next 7 days when enabled.",
+  );
+
+  useEffect(() => {
+    const loadInitialData = async () => {
+      const savedSettings = await loadAppSettings();
+      setSettings(savedSettings);
+
+      try {
+        const currentLocation = await getCurrentLocationSnapshot();
+        setLocationLabel(formatLocationLabel(currentLocation));
+      } catch {
+        setLocationLabel("Permission needed");
+      }
+
+      setNotificationStatus(
+        savedSettings.prayerAlerts
+          ? "Prayer alerts are enabled and ready to sync."
+          : "Prayer alerts are currently off.",
+      );
+    };
+
+    void loadInitialData();
+  }, []);
+
+  const handleToggle = async <K extends keyof AppSettings>(
+    key: K,
+    value: AppSettings[K],
+  ) => {
+    const nextSettings = { ...settings, [key]: value };
+    setSettings(nextSettings);
+    await updateAppSettings({ [key]: value } as Partial<AppSettings>);
+
+    if (
+      key === "prayerAlerts" ||
+      key === "autoSilentAtPrayer" ||
+      key === "adhanSoundEnabled"
+    ) {
+      try {
+        if (nextSettings.prayerAlerts) {
+          const currentLocation = await getCurrentLocationSnapshot();
+          setLocationLabel(formatLocationLabel(currentLocation));
+
+          const scheduledCount = await syncPrayerNotificationsAsync(
+            currentLocation,
+            nextSettings,
+          );
+
+          setNotificationStatus(
+            `Scheduled ${scheduledCount} prayer alerts for the next 7 days${
+              nextSettings.autoSilentAtPrayer
+                ? " in quiet mode."
+                : nextSettings.adhanSoundEnabled
+                  ? " with sound."
+                  : " without sound."
+            }`,
+          );
+        } else {
+          const removedCount = await cancelScheduledPrayerNotificationsAsync();
+          setNotificationStatus(
+            `Prayer alerts disabled. Removed ${removedCount} scheduled notifications.`,
+          );
+        }
+      } catch (err) {
+        setNotificationStatus(
+          err instanceof Error
+            ? err.message
+            : "Unable to update prayer notification settings right now.",
+        );
+      }
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-[#F6FBFA]">
@@ -109,11 +191,9 @@ const Settings = () => {
           <View className="mt-4 flex-row justify-between rounded-2xl bg-white/10 px-4 py-3">
             <View>
               <Text className="text-xs text-white/70">City</Text>
-              <Text className="mt-1 font-semibold text-white">Dhaka</Text>
-            </View>
-            <View>
-              <Text className="text-xs text-white/70">Madhab</Text>
-              <Text className="mt-1 font-semibold text-white">Hanafi</Text>
+              <Text className="mt-1 font-semibold text-white">
+                {locationLabel}
+              </Text>
             </View>
             <View>
               <Text className="text-xs text-white/70">Language</Text>
@@ -127,50 +207,86 @@ const Settings = () => {
           <SettingRow
             icon="notifications-outline"
             title="Prayer alerts"
-            subtitle="Get notified before each salah time"
+            subtitle="Schedule real local notifications for each salah"
             isSwitch
-            value={prayerAlerts}
-            onValueChange={setPrayerAlerts}
+            value={settings.prayerAlerts}
+            onValueChange={(value) => void handleToggle("prayerAlerts", value)}
+          />
+          <SettingRow
+            icon="volume-high-outline"
+            title="Adhan sound"
+            subtitle="Play a sound when the prayer notification arrives"
+            isSwitch
+            value={settings.adhanSoundEnabled}
+            onValueChange={(value) =>
+              void handleToggle("adhanSoundEnabled", value)
+            }
+          />
+          <SettingRow
+            icon="moon-outline"
+            title="Prayer quiet mode"
+            subtitle="Keep prayer alerts silent and prepare Android DND access"
+            isSwitch
+            value={settings.autoSilentAtPrayer}
+            onValueChange={(value) =>
+              void handleToggle("autoSilentAtPrayer", value)
+            }
           />
           <SettingRow
             icon="time-outline"
             title="Daily reminders"
             subtitle="Morning azkar and habit reminders"
             isSwitch
-            value={dailyReminders}
-            onValueChange={setDailyReminders}
+            value={settings.dailyReminders}
+            onValueChange={(value) =>
+              void handleToggle("dailyReminders", value)
+            }
           />
           <SettingRow
             icon="location-outline"
             title="Location"
             subtitle="Used for accurate prayer timings"
-            rightText="Dhaka"
+            rightText={locationLabel}
           />
-          <SettingRow
-            icon="volume-high-outline"
-            title="Adhan sound"
-            subtitle="Choose your notification tone"
-            rightText="Makkah"
-          />
+        </View>
+
+        <View className="mt-4 rounded-2xl bg-slate-900 p-4">
+          <Text className="text-sm font-semibold text-white">
+            Notification status
+          </Text>
+          <Text className="mt-1 text-xs leading-5 text-slate-300">
+            {notificationStatus}
+          </Text>
+
+          {settings.autoSilentAtPrayer ? (
+            <TouchableOpacity
+              onPress={() => void openAndroidDndSettingsAsync()}
+              className="mt-3 self-start rounded-full bg-white px-4 py-2"
+            >
+              <Text className="text-xs font-semibold text-slate-900">
+                Open Android DND settings
+              </Text>
+            </TouchableOpacity>
+          ) : null}
         </View>
 
         <SectionTitle title="App Preferences" />
         <View className="gap-3">
           <SettingRow
-            icon="moon-outline"
+            icon="contrast-outline"
             title="Dark mode"
             subtitle="Use a darker appearance at night"
             isSwitch
-            value={darkMode}
-            onValueChange={setDarkMode}
+            value={settings.darkMode}
+            onValueChange={(value) => void handleToggle("darkMode", value)}
           />
           <SettingRow
             icon="lock-closed-outline"
             title="Biometric lock"
             subtitle="Protect the app with Face ID / Touch ID"
             isSwitch
-            value={biometricLock}
-            onValueChange={setBiometricLock}
+            value={settings.biometricLock}
+            onValueChange={(value) => void handleToggle("biometricLock", value)}
           />
           <SettingRow
             icon="language-outline"
