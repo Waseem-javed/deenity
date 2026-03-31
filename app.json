@@ -47,6 +47,12 @@
             "./assets/fonts/PlusJakartaSans-Light.ttf"
           ]
         }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Allow Deenity to access your location for Qibla direction and accurate prayer times."
+        }
       ]
     ],
     "experiments": {
