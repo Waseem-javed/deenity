@@ -15,13 +15,22 @@ import {
     SimpleLineIcons,
     Zocial,
 } from "@expo/vector-icons";
-import { Icons } from "./Icons";
 
 export const Tabs = [
-  { name: "index", title: "Home", icon: Icons.home },
-  { name: "Subscriptions", title: "Subscriptions", icon: Icons.subscriptions },
-  { name: "Insights", title: "Insights", icon: Icons.insights },
-  { name: "Settings", title: "Settings", icon: Icons.settings },
+  { name: "index", title: "Home", type: "Ionicons", icon: "home-outline" },
+  {
+    name: "Finders",
+    title: "Mosque Finder",
+    type: "MaterialCommunityIcons",
+    icon: "compass-rose",
+  },
+  {
+    name: "Prayers",
+    title: "Prayer Times",
+    type: "MaterialCommunityIcons",
+    icon: "hands-pray",
+  },
+  { name: "Settings", title: "Settings", type: "Ionicons", icon: "settings" },
 ];
 
 export const HomeMenu = [

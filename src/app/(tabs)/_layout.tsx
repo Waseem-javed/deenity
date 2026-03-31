@@ -1,5 +1,5 @@
 import { Tabs as TabsData } from "@/constants/data";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import Icon from "@/constants/Icon";
 import clsx from "clsx";
 import { Tabs } from "expo-router";
 import { View } from "react-native";
@@ -7,18 +7,19 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function TabsLayout() {
   const insets = useSafeAreaInsets();
-  const TabIcon = ({ focused, icon }: TabIconProps) => {
+  const TabIcon = ({ focused, icon, type }: TabIconProps) => {
     return (
       <View
         className={clsx(
-          "rounded-full flex justify-center items-center w-16 h-16",
-          focused ? "bg-[#14B8A6]" : "bg-transparent",
+          "rounded-full w-12 h-12 mb-2 flex justify-center items-center",
+          focused ? "bg-white" : "bg-transparent",
         )}
       >
-        <Ionicons
+        <Icon
           name={icon}
+          type={type}
           size={focused ? 28 : 24}
-          color={focused ? "#fff" : "#14B8A6"}
+          color={focused ? "#14B8A6" : "white"}
         />
       </View>
     );
@@ -31,15 +32,15 @@ export default function TabsLayout() {
         tabBarShowLabel: false,
         tabBarStyle: {
           position: "absolute",
-          bottom: Math.max(insets.bottom, 8),
-          height: 70,
+          bottom: Math.max(insets.bottom, 0),
+          height: 60,
           borderRadius: 35,
           marginHorizontal: 20,
+          backgroundColor: "#14B8A6",
         },
         tabBarItemStyle: {
-          paddingVertical: Math.max(insets.bottom, 10) / 2 - 2,
+          paddingVertical: Math.max(insets.bottom, 0) / 2 - 2,
         },
-        tabBarIconStyle: {},
       }}
     >
       {TabsData.map((tab) => (
@@ -49,7 +50,7 @@ export default function TabsLayout() {
           options={{
             title: tab.title,
             tabBarIcon: ({ focused }) => (
-              <TabIcon focused={focused} icon={tab.icon} />
+              <TabIcon type={tab.type} focused={focused} icon={tab.icon} />
             ),
           }}
         />
