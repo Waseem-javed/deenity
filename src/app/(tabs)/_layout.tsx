@@ -12,13 +12,13 @@ export default function TabsLayout() {
       <View
         className={clsx(
           "rounded-full flex justify-center items-center w-16 h-16",
-          focused ? "bg-blue-100 border-4 border-blue-100" : "bg-transparent",
+          focused ? "bg-[#14B8A6]" : "bg-transparent",
         )}
       >
         <Ionicons
           name={icon}
-          size={focused ? 30 : 20}
-          color={focused ? "#007AFF" : "#8E8E93"}
+          size={focused ? 28 : 24}
+          color={focused ? "#fff" : "#14B8A6"}
         />
       </View>
     );

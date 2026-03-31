@@ -1,11 +1,12 @@
+import { SafeAreaView } from "@/utils/index";
 import React from "react";
-import { Text, View } from "react-native";
+import { Text } from "react-native";
 
 const onBoarding = () => {
   return (
-    <View className="flex-1 bg-slate-100">
-      <Text className="font-sans-bold">onBoarding</Text>
-    </View>
+    <SafeAreaView className="flex-1 justify-center items-center bg-slate-200">
+      <Text className="text3xl font-sans-bold">onBoarding</Text>
+    </SafeAreaView>
   );
 };
 

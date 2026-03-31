@@ -5,10 +5,45 @@
 @import "nativewind/theme";
 
 :root {
-  --font-sans: sans-regular;
-  --font-sans-bold: sans-bold;
-  --font-sans-light: sans-light;
-  --font-sans-medium: sans-medium;
-  --font-sans-semiBold: sans-semiBold;
-  --font-sans-extraBold: sans-extraBold;
+  --primary: "#14B8A6";
+  --primaryDark: "#0F9E8F";
+  --background: "#F5F7F6";
+  --card: "#FFFFFF";
+  --textPrimary: "#1F2937";
+  --textSecondary: "#6B7280";
+  --iconBg: "#E6F7F5";
+  --accent: "#22C55E";
+
+  --font-sans: "sans-regular";
+  --font-sans-bold: "sans-bold";
+  --font-sans-light: "sans-light";
+  --font-sans-medium: "sans-medium";
+  --font-sans-semibold: "sans-semibold";
+  --font-sans-extrabold: "sans-extrabold";
+}
+
+.font-sans {
+  font-family: "sans-regular";
+}
+
+.font-sans-bold {
+  font-family: "sans-bold";
+}
+
+.font-sans-light {
+  font-family: "sans-light";
+}
+
+.font-sans-medium {
+  font-family: "sans-medium";
+}
+
+.font-sans-semibold,
+.font-sans-semiBold {
+  font-family: "sans-semibold";
+}
+
+.font-sans-extrabold,
+.font-sans-extraBold {
+  font-family: "sans-extrabold";
 }
