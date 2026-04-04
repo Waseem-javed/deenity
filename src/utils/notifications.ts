@@ -1,5 +1,5 @@
+import Constants from "expo-constants";
 import * as IntentLauncher from "expo-intent-launcher";
-import * as Notifications from "expo-notifications";
 import { Linking, Platform } from "react-native";
 import type { LocationSnapshot } from "./location";
 import {
@@ -18,8 +18,29 @@ const NOTIFIABLE_PRAYERS: PrayerKey[] = [
   "maghrib",
   "isha",
 ];
+const EXPO_GO_NOTIFICATION_MESSAGE =
+  "Prayer notifications are not available in Expo Go on Android. Use a development build to test scheduled alerts and adhan sound.";
 
-export const configureNotificationHandling = () => {
+const isExpoGoAndroid =
+  Platform.OS === "android" &&
+  (Constants.appOwnership === "expo" ||
+    Constants.executionEnvironment === "storeClient");
+
+const getNotificationsModuleAsync = async () => {
+  if (isExpoGoAndroid) {
+    return null;
+  }
+
+  return import("expo-notifications");
+};
+
+export const configureNotificationHandling = async () => {
+  const Notifications = await getNotificationsModuleAsync();
+
+  if (!Notifications) {
+    return false;
+  }
+
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldShowBanner: true,
@@ -28,9 +49,41 @@ export const configureNotificationHandling = () => {
       shouldSetBadge: false,
     }),
   });
+
+  return true;
+};
+
+export const registerNotificationResponseListener = async (
+  onRoute: (route: string) => void,
+) => {
+  const Notifications = await getNotificationsModuleAsync();
+
+  if (!Notifications) {
+    return () => {};
+  }
+
+  const subscription = Notifications.addNotificationResponseReceivedListener(
+    (response) => {
+      const route = response.notification.request.content.data?.route;
+
+      if (typeof route === "string") {
+        onRoute(route);
+      }
+    },
+  );
+
+  return () => {
+    subscription.remove();
+  };
 };
 
 export const requestNotificationPermissionsAsync = async () => {
+  const Notifications = await getNotificationsModuleAsync();
+
+  if (!Notifications) {
+    throw new Error(EXPO_GO_NOTIFICATION_MESSAGE);
+  }
+
   const existingPermission = await Notifications.getPermissionsAsync();
 
   if (existingPermission.granted) {
@@ -55,6 +108,12 @@ export const requestNotificationPermissionsAsync = async () => {
 };
 
 export const cancelScheduledPrayerNotificationsAsync = async () => {
+  const Notifications = await getNotificationsModuleAsync();
+
+  if (!Notifications) {
+    return 0;
+  }
+
   const scheduledNotifications =
     await Notifications.getAllScheduledNotificationsAsync();
 
@@ -75,7 +134,9 @@ export const cancelScheduledPrayerNotificationsAsync = async () => {
 };
 
 const ensurePrayerNotificationChannelAsync = async (settings: AppSettings) => {
-  if (Platform.OS !== "android") {
+  const Notifications = await getNotificationsModuleAsync();
+
+  if (!Notifications || Platform.OS !== "android") {
     return;
   }
 
@@ -100,12 +161,17 @@ const ensurePrayerNotificationChannelAsync = async (settings: AppSettings) => {
     },
   );
 };
-
 export const syncPrayerNotificationsAsync = async (
   location: LocationSnapshot,
   settings: AppSettings,
   daysAhead = 7,
 ) => {
+  const Notifications = await getNotificationsModuleAsync();
+
+  if (!Notifications) {
+    throw new Error(EXPO_GO_NOTIFICATION_MESSAGE);
+  }
+
   await cancelScheduledPrayerNotificationsAsync();
 
   if (!settings.prayerAlerts) {

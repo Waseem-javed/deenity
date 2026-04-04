@@ -9,6 +9,7 @@ export type AppSettings = {
   darkMode: boolean;
   biometricLock: boolean;
   autoSilentAtPrayer: boolean;
+  arabicFontScale: "small" | "medium" | "large";
 };
 
 export const defaultAppSettings: AppSettings = {
@@ -18,6 +19,7 @@ export const defaultAppSettings: AppSettings = {
   darkMode: false,
   biometricLock: true,
   autoSilentAtPrayer: false,
+  arabicFontScale: "medium",
 };
 
 export const loadAppSettings = async (): Promise<AppSettings> => {

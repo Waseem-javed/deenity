@@ -14,6 +14,8 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import React, { useEffect, useState } from "react";
 import { ScrollView, Switch, Text, TouchableOpacity, View } from "react-native";
 
+type ArabicFontScale = AppSettings["arabicFontScale"];
+
 type SettingRowProps = {
   icon: React.ComponentProps<typeof Ionicons>["name"];
   title: string;
@@ -22,6 +24,7 @@ type SettingRowProps = {
   rightText?: string;
   isSwitch?: boolean;
   onValueChange?: (value: boolean) => void;
+  onPress?: () => void;
 };
 
 const SectionTitle = ({ title }: { title: string }) => (
@@ -36,10 +39,12 @@ const SettingRow = ({
   rightText,
   isSwitch = false,
   onValueChange,
+  onPress,
 }: SettingRowProps) => {
   return (
     <TouchableOpacity
       activeOpacity={0.8}
+      onPress={isSwitch ? undefined : onPress}
       className="flex-row items-center justify-between rounded-2xl border border-slate-100 bg-white px-4 py-4"
     >
       <View className="flex-1 flex-row items-center">
@@ -84,6 +89,13 @@ const Settings = () => {
   const [notificationStatus, setNotificationStatus] = useState(
     "Prayer alerts will be scheduled for the next 7 days when enabled.",
   );
+
+  const nextArabicFontScale: ArabicFontScale =
+    settings.arabicFontScale === "small"
+      ? "medium"
+      : settings.arabicFontScale === "medium"
+        ? "large"
+        : "small";
 
   useEffect(() => {
     const loadInitialData = async () => {
@@ -155,6 +167,12 @@ const Settings = () => {
     }
   };
 
+  const handleArabicFontScale = async () => {
+    const nextSettings = { ...settings, arabicFontScale: nextArabicFontScale };
+    setSettings(nextSettings);
+    await updateAppSettings({ arabicFontScale: nextArabicFontScale });
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-[#F6FBFA]">
       <ScrollView
@@ -175,7 +193,7 @@ const Settings = () => {
 
               <View className="ml-3 flex-1">
                 <Text className="text-lg font-bold text-white">
-                  Mohammad Deen
+                  Waseem Javed
                 </Text>
                 <Text className="text-xs text-white/80">
                   deenity.user@email.com
@@ -298,7 +316,8 @@ const Settings = () => {
             icon="text-outline"
             title="Arabic font size"
             subtitle="Adjust Quran and dua text size"
-            rightText="Medium"
+            rightText={settings.arabicFontScale}
+            onPress={handleArabicFontScale}
           />
         </View>
 

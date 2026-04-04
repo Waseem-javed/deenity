@@ -12,6 +12,7 @@ import {
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useFocusEffect } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
 import React, { useCallback, useMemo, useState } from "react";
 import {
   ActivityIndicator,
@@ -167,6 +168,11 @@ export default function Index() {
                       key={item.name}
                       activeOpacity={0.8}
                       className="mb-6 w-[31%] items-center"
+                      onPress={() => {
+                        if (item.href) {
+                          router.push(item.href as never);
+                        }
+                      }}
                     >
                       <View className="rounded-2xl bg-[#E6F7F5] p-4">
                         <Icon
@@ -180,6 +186,11 @@ export default function Index() {
                       <Text className="mt-2 text-center text-xs text-gray-700">
                         {item.name}
                       </Text>
+                      {!item.href ? (
+                        <Text className="mt-1 text-[10px] font-semibold uppercase tracking-[0.6px] text-slate-400">
+                          Soon
+                        </Text>
+                      ) : null}
                     </TouchableOpacity>
                   ))}
                 </View>

@@ -4,9 +4,13 @@
     "strict": true,
     "paths": {
       "@/*": ["./src/*"],
-      "@/utils/*": ["./utils/*"],
       "@/assets/*": ["./assets/*"],
-      "@/constants/*": ["./constants/*"]
+      "@/utils/*": ["./src/utils/*"],
+      "@/types/*": ["./src/types/*"],
+      "@/config/*": ["./src/config/*"],
+      "@/services/*": ["./src/services/*"],
+      "@/constants/*": ["./src/constants/*"],
+      "@/components/*": ["./src/components/*"]
     }
   },
   "include": [

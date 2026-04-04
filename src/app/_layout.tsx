@@ -1,8 +1,10 @@
 import "../../global.css";
 
-import { configureNotificationHandling } from "@/utils/index";
+import {
+  configureNotificationHandling,
+  registerNotificationResponseListener,
+} from "@/utils/index";
 import { useFonts } from "expo-font";
-import * as Notifications from "expo-notifications";
 import { router, SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
 
@@ -19,19 +21,19 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    configureNotificationHandling();
+    let disposeNotificationListener = () => {};
 
-    const notificationSubscription =
-      Notifications.addNotificationResponseReceivedListener((response) => {
-        const route = response.notification.request.content.data?.route;
-
-        if (typeof route === "string") {
+    void (async () => {
+      await configureNotificationHandling();
+      disposeNotificationListener = await registerNotificationResponseListener(
+        (route) => {
           router.push(route as never);
-        }
-      });
+        },
+      );
+    })();
 
     return () => {
-      notificationSubscription.remove();
+      disposeNotificationListener();
     };
   }, []);
 
