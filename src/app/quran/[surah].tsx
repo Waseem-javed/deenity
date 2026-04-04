@@ -19,9 +19,6 @@ type SurahPageGroup = {
   ayahs: IAyah[];
 };
 
-const ARABIC_FONT_SIZE = 30;
-const PAGE_LINE_HEIGHT = Math.round(ARABIC_FONT_SIZE * 1.9);
-
 const groupAyahsByPage = (ayahs: IAyah[]): SurahPageGroup[] => {
   const pages: Record<number, IAyah[]> = {};
 
@@ -55,10 +52,15 @@ const QuranSurahScreen = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const surahNumber = Number(surah);
+  const surahParam = Array.isArray(surah) ? surah[0] : surah;
+  const surahNumber = Number(surahParam);
 
   const loadSurah = useCallback(async () => {
-    if (!Number.isFinite(surahNumber) || surahNumber <= 0) {
+    if (
+      !Number.isFinite(surahNumber) ||
+      surahNumber <= 0 ||
+      surahNumber > 114
+    ) {
       setError("Invalid surah number.");
       setData(null);
       setLoading(false);
@@ -93,7 +95,7 @@ const QuranSurahScreen = () => {
     <SafeAreaView className="flex-1 p-5 bg-[#0F766E]">
       <View className="flex-row items-center justify-between">
         <TouchableOpacity
-          onPress={() => router.back()}
+          onPress={() => router.replace("/quran")}
           className="h-11 w-11 items-center justify-center rounded-full bg-white/15"
         >
           <Ionicons name="arrow-back" size={22} color="white" />
@@ -107,7 +109,10 @@ const QuranSurahScreen = () => {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ padding: 5, paddingBottom: 40 }}
+        contentContainerStyle={{
+          justifyContent: "center",
+          alignItems: "center",
+        }}
       >
         {loading ? (
           <View className="flex-1 justify-center items-center mt-10">
@@ -132,22 +137,14 @@ const QuranSurahScreen = () => {
             </TouchableOpacity>
           </View>
         ) : (
-          <>
-            <View className="mb-5 rounded-[30px] bg-white px-5 py-6 shadow-sm">
-              <Text className="text-center text-xs font-semibold uppercase tracking-[1px] text-[#0F766E]">
-                Surah Reader
-              </Text>
-              <Text className="mt-3 text-lg font-bold text-center text-slate-900">
-                {data?.englishName}
-              </Text>
-              <Text className="text-center text-3xl mt-2 text-slate-900">
-                {data?.name}
-              </Text>
-              <Text className="mt-3 text-center text-sm leading-6 text-slate-500">
-                {data?.englishNameTranslation} • {data?.numberOfAyahs} ayahs •{" "}
-                {data?.revelationType}
-              </Text>
-            </View>
+          <View className="mb-5 rounded-[30px] py-6">
+            <Text className="text-center text-3xl mt-2 text-white">
+              {data?.name}
+            </Text>
+            <Text className="mt-3 text-center text-sm leading-6 text-white">
+              {data?.englishNameTranslation} • {data?.numberOfAyahs} ayahs •{" "}
+              {data?.revelationType}
+            </Text>
 
             {pages.map((page) => (
               <QuranPageCard
@@ -155,10 +152,9 @@ const QuranSurahScreen = () => {
                 juzNumbers={page.juzNumbers}
                 pageNumber={page.pageNumber}
                 ayahs={page.ayahs}
-                arabicFontSize={ARABIC_FONT_SIZE}
               />
             ))}
-          </>
+          </View>
         )}
       </ScrollView>
     </SafeAreaView>

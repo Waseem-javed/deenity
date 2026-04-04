@@ -13,7 +13,7 @@ const SurahListCard = ({ surah, onPress }: SurahListCardProps) => {
     <TouchableOpacity
       activeOpacity={0.88}
       onPress={onPress}
-      className="mb-3 rounded-[28px] border border-white bg-white px-4 py-4 shadow-sm"
+      className="rounded-[28px] mb-2 border border-[#166534]/30 bg-white px-4 py-4 shadow-sm"
     >
       <View className="flex-row items-center justify-between">
         <View className="flex-1 flex-row items-center">
@@ -27,7 +27,7 @@ const SurahListCard = ({ surah, onPress }: SurahListCardProps) => {
             <Text className="text-xs font-semibold uppercase tracking-[0.8px] text-slate-400">
               Surah {surah.number}
             </Text>
-            <Text className="mt-1 text-lg font-bold text-red-800">
+            <Text className="mt-1 text-lg font-bold text-[#166534]">
               {surah.englishName}({surah.name})
             </Text>
             <Text className="mt-1 text-sm text-slate-500">

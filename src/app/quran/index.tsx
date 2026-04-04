@@ -143,20 +143,18 @@ const QuranIndex = () => {
                 </Text>
               </TouchableOpacity>
             </View>
-          ) : (
-            listData.length === 0 ? (
-              <View className="rounded-4xl border border-slate-200 bg-white p-5">
-                <Text className="text-base font-semibold text-yellow-900">
-                  No {activeTab} found
-                </Text>
-                <Text className="mt-2 text-sm leading-6 text-slate-500">
-                  {activeTab === "surah"
-                    ? "Try searching with a surah number or name."
-                    : "Try searching with a para number, juz number, or para name."}
-                </Text>
-              </View>
-            ) : null
-          )
+          ) : listData.length === 0 ? (
+            <View className="rounded-4xl border border-slate-200 bg-white p-5">
+              <Text className="text-base font-semibold text-yellow-900">
+                No {activeTab} found
+              </Text>
+              <Text className="mt-2 text-sm leading-6 text-slate-500">
+                {activeTab === "surah"
+                  ? "Try searching with a surah number or name."
+                  : "Try searching with a para number, juz number, or para name."}
+              </Text>
+            </View>
+          ) : null
         }
         renderItem={({ item }) => {
           return activeTab === "surah" ? (
