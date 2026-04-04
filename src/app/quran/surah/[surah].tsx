@@ -1,8 +1,8 @@
+import QuranReaderHeader from "@/components/quran/QuranReaderHeader";
 import QuranPageCard from "@/components/quran/surah/SurahPage";
 import { fetchSurahByNumber } from "@/services/quran/quranService";
-import { IAyah, ISurahDetail } from "@/types/quran";
-import { SafeAreaView } from "@/utils";
-import { Ionicons } from "@expo/vector-icons";
+import { ISurahDetail } from "@/types/quran";
+import { SafeAreaView, groupAyahsByPage, normalizeRouteParam } from "@/utils";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
@@ -13,38 +13,6 @@ import {
   View,
 } from "react-native";
 
-type SurahPageGroup = {
-  pageNumber: number;
-  juzNumbers: number[];
-  ayahs: IAyah[];
-};
-
-const groupAyahsByPage = (ayahs: IAyah[]): SurahPageGroup[] => {
-  const pages: Record<number, IAyah[]> = {};
-
-  ayahs.forEach((ayah) => {
-    const page = ayah.page;
-
-    if (!pages[page]) {
-      pages[page] = [];
-    }
-
-    pages[page].push(ayah);
-  });
-
-  return Object.keys(pages)
-    .map((pageNumber) => {
-      const pageAyahs = pages[Number(pageNumber)];
-
-      return {
-        pageNumber: Number(pageNumber),
-        ayahs: pageAyahs,
-        juzNumbers: [...new Set(pageAyahs.map((ayah) => ayah.juz))],
-      };
-    })
-    .sort((a, b) => a.pageNumber - b.pageNumber);
-};
-
 const QuranSurahScreen = () => {
   const { surah } = useLocalSearchParams<{ surah: string }>();
 
@@ -52,7 +20,7 @@ const QuranSurahScreen = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const surahParam = Array.isArray(surah) ? surah[0] : surah;
+  const surahParam = normalizeRouteParam(surah);
   const surahNumber = Number(surahParam);
 
   const loadSurah = useCallback(async () => {
@@ -93,27 +61,23 @@ const QuranSurahScreen = () => {
 
   return (
     <SafeAreaView className="flex-1 p-5 bg-[#0F766E]">
-      <View className="flex-row items-center justify-between">
-        <TouchableOpacity
-          onPress={() => router.replace("/quran")}
-          className="h-11 w-11 items-center justify-center rounded-full bg-white/15"
-        >
-          <Ionicons name="arrow-back" size={22} color="white" />
-        </TouchableOpacity>
-        <View className="rounded-full bg-emerald-300/20 px-4 py-2">
-          <Text className="text-xs font-semibold uppercase tracking-[1px] text-white">
-            Surah
-          </Text>
-        </View>
-      </View>
-
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          justifyContent: "center",
-          alignItems: "center",
+          paddingBottom: 32,
         }}
       >
+        <QuranReaderHeader
+          badge="Surah Reader"
+          title={data?.name ?? `Surah ${surahNumber || "--"}`}
+          subtitle={
+            data
+              ? `${data.englishName} • ${data.englishNameTranslation} • ${data.numberOfAyahs} ayahs • ${data.revelationType}`
+              : "Loading surah details..."
+          }
+          onBack={() => router.replace("/quran")}
+        />
+
         {loading ? (
           <View className="flex-1 justify-center items-center mt-10">
             <ActivityIndicator size="large" color="#fff" />
@@ -137,15 +101,7 @@ const QuranSurahScreen = () => {
             </TouchableOpacity>
           </View>
         ) : (
-          <View className="mb-5 rounded-[30px] py-6">
-            <Text className="text-center text-3xl mt-2 text-white">
-              {data?.name}
-            </Text>
-            <Text className="mt-3 text-center text-sm leading-6 text-white">
-              {data?.englishNameTranslation} • {data?.numberOfAyahs} ayahs •{" "}
-              {data?.revelationType}
-            </Text>
-
+          <View className="mt-6">
             {pages.map((page) => (
               <QuranPageCard
                 key={page.pageNumber}

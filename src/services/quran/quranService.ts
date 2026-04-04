@@ -1,14 +1,35 @@
 import { config, QuranInstance } from "@/config";
 import {
+  IJuzDetail,
+  IJuzDetailResponse,
   ISurah,
   ISurahDetail,
   ISurahDetailResponse,
   ISurahListResponse,
 } from "@/types/quran";
 
+let surahListCache: ISurah[] | null = null;
+let surahListPromise: Promise<{ data: ISurah[] }> | null = null;
+const juzDetailCache = new Map<number, IJuzDetail>();
+const juzDetailPromiseCache = new Map<number, Promise<IJuzDetail>>();
+
 export const fetchAllSurahs = async (): Promise<{ data: ISurah[] }> => {
-  const response = await QuranInstance.get<ISurahListResponse>("/surah", config);
-  return { data: response.data.data };
+  if (surahListCache) {
+    return { data: surahListCache };
+  }
+
+  if (!surahListPromise) {
+    surahListPromise = QuranInstance.get<ISurahListResponse>("/surah", config)
+      .then((response) => {
+        surahListCache = response.data.data;
+        return { data: surahListCache };
+      })
+      .finally(() => {
+        surahListPromise = null;
+      });
+  }
+
+  return surahListPromise;
 };
 
 export const fetchSurahByNumber = async (
@@ -21,11 +42,30 @@ export const fetchSurahByNumber = async (
   return response.data.data;
 };
 
-// export const fetchJuzs = async (): Promise<IJuzSummary> => {
-//   const juszResponses: IJuzResponse[] = [];
-//   for (let i = 1; i <= 30; i++) {
-//     const response = await QuranInstance.get(`/juz/${i}`);
-//     juszResponses.push(response.data);
-//   }
-//   return { data: juszResponses };
-// };
+export const fetchJuzByNumber = async (number: number): Promise<IJuzDetail> => {
+  const cachedDetail = juzDetailCache.get(number);
+
+  if (cachedDetail) {
+    return cachedDetail;
+  }
+
+  const pendingDetail = juzDetailPromiseCache.get(number);
+
+  if (pendingDetail) {
+    return pendingDetail;
+  }
+
+  const request = QuranInstance.get<IJuzDetailResponse>(`/juz/${number}`, config)
+    .then((response) => {
+      const detail = response.data.data;
+      juzDetailCache.set(number, detail);
+      return detail;
+    })
+    .finally(() => {
+      juzDetailPromiseCache.delete(number);
+    });
+
+  juzDetailPromiseCache.set(number, request);
+
+  return request;
+};

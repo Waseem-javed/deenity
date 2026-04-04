@@ -6,5 +6,5 @@ export const SafeAreaView = styled(RNSafeAreaView);
 export * from "./location";
 export * from "./notifications";
 export * from "./prayer";
+export * from "./quran";
 export * from "./settings";
-

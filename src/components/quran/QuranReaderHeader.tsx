@@ -4,8 +4,8 @@ import { Text, TouchableOpacity, View } from "react-native";
 
 type QuranReaderHeaderProps = {
   badge: string;
-  title: string;
-  subtitle: string;
+  title?: string;
+  subtitle?: string;
   onBack: () => void;
 };
 
@@ -16,7 +16,7 @@ const QuranReaderHeader = ({
   onBack,
 }: QuranReaderHeaderProps) => {
   return (
-    <View className="rounded-[30px] bg-[#14B8A6] px-5 pb-6 pt-5">
+    <View className=" bg-[#14B8A6]">
       <View className="flex-row items-center justify-between">
         <TouchableOpacity
           onPress={onBack}
@@ -24,8 +24,7 @@ const QuranReaderHeader = ({
         >
           <Ionicons name="arrow-back" size={22} color="white" />
         </TouchableOpacity>
-
-        <View className="rounded-full bg-white/15 px-4 py-2">
+        <View className="rounded-full bg-emerald-300/20 px-4 py-2">
           <Text className="text-xs font-semibold uppercase tracking-[1px] text-white">
             {badge}
           </Text>

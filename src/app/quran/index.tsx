@@ -4,23 +4,36 @@ import QuranOverviewCards from "@/components/quran/QuranOverviewCards";
 import QuranSegmentTabs from "@/components/quran/QuranSegmentTabs";
 import SurahListCard from "@/components/quran/surah/SurahListCard";
 import { fetchAllSurahs } from "@/services/quran/quranService";
-import type { ISurah, QuranTab } from "@/types/quran";
-import { SafeAreaView } from "@/utils/index";
-import { router } from "expo-router";
+import type { IParaListItem, ISurah, QuranTab } from "@/types/quran";
+import { SafeAreaView, buildParaList } from "@/utils/index";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
+  ListRenderItem,
   RefreshControl,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
 
+type QuranListItem = ISurah | IParaListItem;
+
+const isParaListItem = (item: QuranListItem): item is IParaListItem => {
+  return "arabicName" in item;
+};
+
 const QuranIndex = () => {
+  const params = useLocalSearchParams<{ tab?: QuranTab | QuranTab[] }>();
+  const initialTabParam = Array.isArray(params.tab)
+    ? params.tab[0]
+    : params.tab;
+  const initialTab: QuranTab = initialTabParam === "para" ? "para" : "surah";
   const [surahs, setSurahs] = useState<ISurah[]>([]);
+  const paras = useMemo<IParaListItem[]>(() => buildParaList(), []);
   const [search, setSearch] = useState("");
-  const [activeTab, setActiveTab] = useState<QuranTab>("surah");
+  const [activeTab, setActiveTab] = useState<QuranTab>(initialTab);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -35,8 +48,9 @@ const QuranIndex = () => {
 
       setError(null);
 
-      const response = await fetchAllSurahs();
-      setSurahs(Array.isArray(response.data) ? response.data : []);
+      const surahResponse = await fetchAllSurahs();
+
+      setSurahs(Array.isArray(surahResponse.data) ? surahResponse.data : []);
     } catch (err) {
       setError(
         err instanceof Error
@@ -53,6 +67,10 @@ const QuranIndex = () => {
   useEffect(() => {
     void loadSurahs();
   }, [loadSurahs]);
+
+  useEffect(() => {
+    setActiveTab(initialTab);
+  }, [initialTab]);
 
   const normalizedSearch = search.trim().toLowerCase();
   const filteredSurahs = useMemo(() => {
@@ -74,7 +92,45 @@ const QuranIndex = () => {
     });
   }, [normalizedSearch, surahs]);
 
-  const listData = activeTab === "surah" ? filteredSurahs : [];
+  const filteredParas = useMemo(() => {
+    if (!normalizedSearch) {
+      return paras;
+    }
+
+    return paras.filter((para) => {
+      const searchableText = [
+        para.number.toString(),
+        `juz ${para.number}`,
+        `para ${para.number}`,
+        para.arabicName,
+        para.englishName,
+      ]
+        .join(" ")
+        .toLowerCase();
+
+      return searchableText.includes(normalizedSearch);
+    });
+  }, [normalizedSearch, paras]);
+
+  const listData: QuranListItem[] =
+    activeTab === "surah" ? filteredSurahs : filteredParas;
+  const renderItem: ListRenderItem<QuranListItem> = ({ item }) => {
+    if (isParaListItem(item)) {
+      return (
+        <ParaListCard
+          para={item}
+          onPress={() => router.push(`/quran/para/${item.number}` as never)}
+        />
+      );
+    }
+
+    return (
+      <SurahListCard
+        surah={item}
+        onPress={() => router.push(`/quran/surah/${item.number}` as never)}
+      />
+    );
+  };
 
   return (
     <SafeAreaView className="flex-1 p-5 bg-[#F6FBFA]">
@@ -85,7 +141,7 @@ const QuranIndex = () => {
       />
       <QuranOverviewCards meccanCount={86} medinanCount={28} />
 
-      <FlatList
+      <FlatList<QuranListItem>
         data={listData}
         key={activeTab}
         keyExtractor={(item) => `${activeTab}-${item.number}`}
@@ -156,19 +212,7 @@ const QuranIndex = () => {
             </View>
           ) : null
         }
-        renderItem={({ item }) => {
-          return activeTab === "surah" ? (
-            <SurahListCard
-              surah={item}
-              onPress={() => router.push(`/quran/${item.number}` as never)}
-            />
-          ) : (
-            <ParaListCard
-              para={item}
-              onPress={() => router.push(`/quran/para/${1}` as never)}
-            />
-          );
-        }}
+        renderItem={renderItem}
       />
     </SafeAreaView>
   );

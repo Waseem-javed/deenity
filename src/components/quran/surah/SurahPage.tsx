@@ -2,13 +2,6 @@ import type { IAyah } from "@/types/quran";
 import React, { useMemo } from "react";
 import { Text, View } from "react-native";
 
-type TranslationLine = {
-  ayahNumber: number;
-  surahName?: string;
-  text?: string;
-  translationText?: string;
-};
-
 type QuranPageCardProps = {
   pageNumber: number;
   juzNumbers?: number[];
@@ -17,7 +10,6 @@ type QuranPageCardProps = {
   arabicText?: string;
   arabicFontSize?: number;
   minHeight?: number;
-  translations?: TranslationLine[];
 };
 
 const formatAyahMarker = (ayahNumber: number) =>
@@ -29,6 +21,8 @@ const QuranPageCard = ({
   juzLabel,
   ayahs = [],
   arabicText,
+  arabicFontSize = 30,
+  minHeight,
 }: QuranPageCardProps) => {
   const resolvedArabicText = useMemo(() => {
     if (arabicText?.trim()) {
@@ -47,16 +41,22 @@ const QuranPageCard = ({
   }, [arabicText, ayahs]);
 
   return (
-    <View className="rounded-lg border border-[#E7F1EE] p-2 my-2">
-      <View className="">
-        <Text className="leading-tight text-white text-justify py-2 font-space text-3xl font-bold">
-          {resolvedArabicText}
+    <View className="my-2 rounded-[28px] border border-[#E7F1EE] bg-white/10 p-4">
+      <View className="mb-3 flex-row items-center justify-between">
+        <Text className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[1px] text-white">
+          {juzLabel ?? (juzNumbers?.length ? `Juz ${juzNumbers.join(", ")}` : "Quran")}
+        </Text>
+        <Text className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[1px] text-white">
+          Page {pageNumber}
         </Text>
       </View>
 
-      <View className="flex justify-center items-center">
-        <Text className="bg-white/10 px-4 p-2 rounded-full text-xs font-semibold uppercase tracking-[1px] text-white">
-          {pageNumber}
+      <View style={minHeight ? { minHeight } : undefined}>
+        <Text
+          className="py-2 text-right font-bold leading-tight text-white"
+          style={{ fontSize: arabicFontSize }}
+        >
+          {resolvedArabicText}
         </Text>
       </View>
     </View>
