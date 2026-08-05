@@ -2,7 +2,7 @@
   "expo": {
     "name": "Deenity",
     "slug": "deenity",
-    "version": "1.0.1",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "deenity",
@@ -16,7 +16,7 @@
       }
     },
     "android": {
-      "versionCode": 2,
+      "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#005A5A",
         "foregroundImage": "./assets/images/adaptive-icon.png"
