@@ -11,8 +11,8 @@ import { QiblaAlignmentAlert } from "@/components/QiblaAlignmentAlert";
 import { getThemePreference } from "@/lib/preferences";
 import "../../global.css";
 
-const lightTheme = { ...MD3LightTheme, colors: { ...MD3LightTheme.colors, primary: "#1d4ed8" } };
-const darkTheme = { ...MD3DarkTheme, colors: { ...MD3DarkTheme.colors, primary: "#60a5fa" } };
+const lightTheme = { ...MD3LightTheme, colors: { ...MD3LightTheme.colors, primary: "#0f8478" } };
+const darkTheme = { ...MD3DarkTheme, colors: { ...MD3DarkTheme.colors, primary: "#3bcab0" } };
 
 export default function RootLayout() {
   const { colorScheme, setColorScheme } = useColorScheme();
@@ -34,8 +34,8 @@ export default function RootLayout() {
           <Stack
             screenOptions={{
               headerShadowVisible: false,
-              headerStyle: { backgroundColor: isDark ? "#020617" : "#f8fafc" },
-              headerTintColor: isDark ? "#60a5fa" : "#1d4ed8",
+              headerStyle: { backgroundColor: isDark ? "#03100f" : "#f3fbf9" },
+              headerTintColor: isDark ? "#3bcab0" : "#0f8478",
               headerTitleStyle: { fontWeight: "600", color: isDark ? "#ffffff" : "#0f172a" },
             }}
           >

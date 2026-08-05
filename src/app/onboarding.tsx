@@ -2,11 +2,12 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useRef, useState } from "react";
+import { useColorScheme } from "nativewind";
 import { Dimensions, FlatList, Text, View, type ListRenderItemInfo, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
 import { Button } from "react-native-paper";
-import Animated, { LinearTransition } from "react-native-reanimated";
-import { SafeAreaView } from "react-native-safe-area-context";
+import Animated, { FadeIn, LinearTransition } from "react-native-reanimated";
 
+import { ScreenContainer } from "@/components/ui/ScreenContainer";
 import { setHasOnboarded } from "@/lib/onboarding";
 
 const { width } = Dimensions.get("window");
@@ -43,6 +44,8 @@ export default function OnboardingScreen() {
   const [index, setIndex] = useState(0);
   const listRef = useRef<FlatList<Slide>>(null);
   const isLast = index === SLIDES.length - 1;
+  const { colorScheme } = useColorScheme();
+  const isDark = colorScheme === "dark";
 
   async function finish() {
     await setHasOnboarded(true);
@@ -64,9 +67,9 @@ export default function OnboardingScreen() {
 
   function renderSlide({ item }: ListRenderItemInfo<Slide>) {
     return (
-      <View style={{ width }} className="flex-1 items-center justify-center px-8">
+      <Animated.View entering={FadeIn.duration(500)} style={{ width }} className="flex-1 items-center justify-center px-8">
         <LinearGradient
-          colors={["#3b82f6", "#1d4ed8"]}
+          colors={["#1ba894", "#005A5A"]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={{
@@ -75,7 +78,7 @@ export default function OnboardingScreen() {
             borderRadius: 56,
             alignItems: "center",
             justifyContent: "center",
-            shadowColor: "#1d4ed8",
+            shadowColor: "#005A5A",
             shadowOffset: { width: 0, height: 8 },
             shadowOpacity: 0.3,
             shadowRadius: 16,
@@ -86,12 +89,12 @@ export default function OnboardingScreen() {
         </LinearGradient>
         <Text className="mt-8 text-center text-2xl font-semibold text-slate-900 dark:text-white">{item.title}</Text>
         <Text className="mt-3 text-center text-base leading-6 text-slate-600 dark:text-slate-300">{item.description}</Text>
-      </View>
+      </Animated.View>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-50 dark:bg-slate-950">
+    <ScreenContainer className="px-0 py-0">
       <View className="flex-row justify-end px-6 pt-2">
         <Button onPress={finish} textColor="#64748b">
           Skip
@@ -115,7 +118,12 @@ export default function OnboardingScreen() {
           <Animated.View
             key={slide.key}
             layout={LinearTransition.duration(200)}
-            className={i === index ? "h-2 w-6 rounded-full bg-brand-600" : "h-2 w-2 rounded-full bg-slate-300 dark:bg-slate-700"}
+            className="rounded-full"
+            style={{
+              height: 8,
+              width: i === index ? 24 : 8,
+              backgroundColor: i === index ? "#0f8478" : isDark ? "#334155" : "#cbd5e1",
+            }}
           />
         ))}
       </View>
@@ -125,6 +133,6 @@ export default function OnboardingScreen() {
           {isLast ? "Get started" : "Next"}
         </Button>
       </View>
-    </SafeAreaView>
+    </ScreenContainer>
   );
 }

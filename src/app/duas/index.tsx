@@ -40,12 +40,12 @@ export default function DuasScreen() {
           contentContainerClassName="px-6 pt-4 pb-6 gap-2"
           renderItem={({ item }) => (
             <Link href={`/duas/${item.id}`} asChild>
-              <Pressable className="flex-row items-center justify-between rounded-2xl bg-white dark:bg-slate-900 p-4 active:opacity-70">
+              <Pressable className="flex-row items-center justify-between rounded-2xl bg-white/70 dark:bg-white/10 border border-white/60 dark:border-white/10 p-4 active:opacity-70">
                 <View className="flex-1 pr-3">
                   <Text className="text-base font-semibold text-slate-900 dark:text-white">{item.name}</Text>
                   <Text className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">{item.description}</Text>
                 </View>
-                <View className="h-8 min-w-8 items-center justify-center rounded-full bg-brand-50 dark:bg-slate-800 px-2">
+                <View className="h-8 min-w-8 items-center justify-center rounded-full bg-brand-50 dark:bg-brand-400/15 px-2">
                   <Text className="text-xs font-semibold text-brand-600 dark:text-brand-400">{item.count}</Text>
                 </View>
               </Pressable>

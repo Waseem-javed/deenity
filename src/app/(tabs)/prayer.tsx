@@ -3,6 +3,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Link } from "expo-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Text, View } from "react-native";
+import Animated, { FadeInDown } from "react-native-reanimated";
 
 import { AsyncState } from "@/components/ui/AsyncState";
 import { ScreenContainer } from "@/components/ui/ScreenContainer";
@@ -99,14 +100,23 @@ export default function PrayerScreen() {
         <Text className="mt-1 text-base text-slate-600 dark:text-slate-300">Based on your current location</Text>
 
         <LinearGradient
-          colors={["#1d4ed8", "#0f2f9e"]}
+          colors={["#1ba894", "#005A5A"]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
-          style={{ borderRadius: 24, marginTop: 16, padding: 20 }}
+          style={{
+            borderRadius: 24,
+            marginTop: 16,
+            padding: 20,
+            shadowColor: "#005A5A",
+            shadowOffset: { width: 0, height: 8 },
+            shadowOpacity: 0.3,
+            shadowRadius: 16,
+            elevation: 4,
+          }}
         >
           <View className="flex-row items-center justify-between">
-            <Text className="text-sm font-medium text-blue-100">{now.toLocaleDateString(undefined, DATE_FORMAT)}</Text>
-            <MaterialCommunityIcons name="mosque" size={18} color="#bfdbfe" />
+            <Text className="text-sm font-medium text-white/80">{now.toLocaleDateString(undefined, DATE_FORMAT)}</Text>
+            <MaterialCommunityIcons name="mosque" size={18} color="#ffffff" />
           </View>
 
           <Text className="mt-2 text-center text-5xl font-semibold tabular-nums text-white">
@@ -117,40 +127,46 @@ export default function PrayerScreen() {
 
       <AsyncState loading={locating} error={locationError ?? error} onRetry={locationError ? retryLocation : load}>
         <View className="gap-2 px-6" style={{ paddingBottom: clearance }}>
-          {PRAYER_ORDER.map(({ key, label, icon }) => {
+          {PRAYER_ORDER.map(({ key, label, icon }, i) => {
             const isActive = key === active?.key;
             return (
-              <View
-                key={key}
-                className={[
-                  "flex-row items-center justify-between rounded-2xl p-4 border-2",
-                  isActive ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-500/10" : "border-transparent bg-white dark:bg-slate-900",
-                ].join(" ")}
-                style={
-                  isActive
-                    ? { shadowColor: "#10b981", shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.35, shadowRadius: 10, elevation: 3 }
-                    : undefined
-                }
-              >
-                <View className="flex-row items-center gap-3">
-                  <View
-                    className={["h-10 w-10 items-center justify-center rounded-xl", isActive ? "bg-emerald-500/15" : "bg-brand-50 dark:bg-slate-800"].join(
-                      " ",
-                    )}
-                  >
-                    <MaterialCommunityIcons name={icon} size={20} color={isActive ? "#10b981" : "#1d4ed8"} />
-                  </View>
-                  <Text className="text-base font-medium text-slate-900 dark:text-white">{label}</Text>
-                  {isActive ? (
-                    <View className="rounded-full bg-emerald-500 px-2 py-0.5">
-                      <Text className="text-xs font-semibold text-white">NOW</Text>
+              <Animated.View key={key} entering={FadeInDown.delay(i * 40).springify().damping(18)}>
+                <View
+                  className={[
+                    "flex-row items-center justify-between rounded-2xl p-4 border",
+                    isActive
+                      ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-500/10"
+                      : "border-white/60 dark:border-white/10 bg-white/70 dark:bg-white/10",
+                  ].join(" ")}
+                  style={
+                    isActive
+                      ? { shadowColor: "#10b981", shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.35, shadowRadius: 10 }
+                      : undefined
+                  }
+                >
+                  <View className="flex-row items-center gap-3">
+                    <View
+                      className={[
+                        "h-10 w-10 items-center justify-center rounded-xl",
+                        isActive ? "bg-emerald-500/15" : "bg-brand-50 dark:bg-brand-400/15",
+                      ].join(" ")}
+                    >
+                      <MaterialCommunityIcons name={icon} size={20} color={isActive ? "#10b981" : "#0f8478"} />
                     </View>
-                  ) : null}
+                    <Text className="text-base font-medium text-slate-900 dark:text-white">{label}</Text>
+                    {isActive ? (
+                      <View className="rounded-full bg-emerald-500 px-2 py-0.5">
+                        <Text className="text-xs font-semibold text-white">NOW</Text>
+                      </View>
+                    ) : null}
+                  </View>
+                  <Text
+                    className={isActive ? "text-base font-semibold text-emerald-600 dark:text-emerald-400" : "text-base text-slate-600 dark:text-slate-300"}
+                  >
+                    {times ? formatPrayerTime(times[key]) : "—"}
+                  </Text>
                 </View>
-                <Text className={isActive ? "text-base font-semibold text-emerald-600 dark:text-emerald-400" : "text-base text-slate-600 dark:text-slate-300"}>
-                  {times ? formatPrayerTime(times[key]) : "—"}
-                </Text>
-              </View>
+              </Animated.View>
             );
           })}
 

@@ -33,7 +33,7 @@ function AmountField({
 
 function Section({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) {
   return (
-    <View className="rounded-2xl bg-white dark:bg-slate-900 p-4">
+    <View className="rounded-2xl bg-white/70 dark:bg-white/10 border border-white/60 dark:border-white/10 p-4">
       <Text className="text-base font-semibold text-slate-900 dark:text-white">{title}</Text>
       <Text className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">{subtitle}</Text>
       <View className="mt-3 gap-3">{children}</View>
@@ -142,7 +142,7 @@ export default function ZakatScreen() {
         {error ? <Text className="text-center text-base text-slate-600 dark:text-slate-300">{error}</Text> : null}
 
         {result !== null ? (
-          <View className="mt-2 rounded-2xl bg-brand-50 dark:bg-slate-800 p-6">
+          <View className="mt-2 rounded-2xl bg-brand-50 dark:bg-brand-400/10 p-6">
             <View className="items-center">
               <Text className="text-sm font-medium text-brand-600 dark:text-brand-400">{result.aboveNisab ? "Zakat due" : "Below nisab"}</Text>
               <Text className="mt-1 text-3xl font-semibold text-slate-900 dark:text-white">{result.dueFormatted}</Text>
@@ -150,7 +150,7 @@ export default function ZakatScreen() {
             </View>
 
             {result.aboveNisab ? (
-              <View className="mt-4 flex-row justify-between border-t border-brand-100 pt-4 dark:border-slate-700">
+              <View className="mt-4 flex-row justify-between border-t border-brand-100 pt-4 dark:border-white/10">
                 <View>
                   <Text className="text-xs text-slate-500 dark:text-slate-400">Net zakatable wealth</Text>
                   <Text className="mt-0.5 text-base font-medium text-slate-900 dark:text-white">{result.netZakatableWealth.toLocaleString()}</Text>

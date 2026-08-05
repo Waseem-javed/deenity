@@ -56,11 +56,11 @@ export default function QuranScreen() {
           keyExtractor={(item) => String(item.number)}
           contentContainerClassName="px-6 gap-2"
           contentContainerStyle={{ paddingBottom: clearance }}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => load({ silent: true })} tintColor="#1d4ed8" />}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => load({ silent: true })} tintColor="#0f8478" />}
           renderItem={({ item }) => (
             <Link href={`/quran/${item.number}`} asChild>
-              <Pressable className="flex-row items-center gap-4 rounded-2xl bg-white dark:bg-slate-900 p-4 active:opacity-70">
-                <View className="h-10 w-10 items-center justify-center rounded-full bg-brand-50 dark:bg-slate-800">
+              <Pressable className="flex-row items-center gap-4 rounded-2xl bg-white/70 dark:bg-white/10 border border-white/60 dark:border-white/10 p-4 active:opacity-70">
+                <View className="h-10 w-10 items-center justify-center rounded-full bg-brand-50 dark:bg-brand-400/15">
                   <Text className="font-semibold text-brand-600 dark:text-brand-400">{item.number}</Text>
                 </View>
                 <View className="flex-1">

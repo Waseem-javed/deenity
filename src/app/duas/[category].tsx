@@ -52,7 +52,7 @@ export default function DuaCategoryScreen() {
           keyExtractor={(item) => String(item.id)}
           contentContainerClassName="px-6 pt-4 pb-6 gap-3"
           renderItem={({ item }) => (
-            <View className="rounded-2xl bg-white dark:bg-slate-900 p-4">
+            <View className="rounded-2xl bg-white/70 dark:bg-white/10 border border-white/60 dark:border-white/10 p-4">
               <Text className="text-base font-semibold text-slate-900 dark:text-white">{item.title}</Text>
               <Text className="mt-2 text-right text-xl leading-9 text-slate-900 dark:text-white">{item.arabic}</Text>
               {item.transliteration ? <Text className="mt-2 text-sm italic leading-6 text-slate-500 dark:text-slate-400">{item.transliteration}</Text> : null}

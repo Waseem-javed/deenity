@@ -2,7 +2,7 @@
   "expo": {
     "name": "Deenity",
     "slug": "deenity",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "deenity",
@@ -10,12 +10,13 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.meesaw.deenity",
+      "bundleIdentifier": "com.sundaycode.deenity",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
+      "versionCode": 2,
       "adaptiveIcon": {
         "backgroundColor": "#005A5A",
         "foregroundImage": "./assets/images/adaptive-icon.png"
@@ -28,7 +29,7 @@
         "android.permission.RECORD_AUDIO",
         "android.permission.MODIFY_AUDIO_SETTINGS"
       ],
-      "package": "com.meesaw.deenity"
+      "package": "com.sundaycode.deenity"
     },
     "web": {
       "output": "static",
@@ -42,9 +43,9 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff",
+          "backgroundColor": "#f3fbf9",
           "dark": {
-            "backgroundColor": "#000000"
+            "backgroundColor": "#03100f"
           }
         }
       ],
@@ -59,10 +60,8 @@
         "expo-notifications",
         {
           "icon": "./assets/images/icon.png",
-          "color": "#1d4ed8",
-          "sounds": [
-            "./assets/audio/adhan.wav"
-          ]
+          "color": "#005A5A",
+          "sounds": ["./assets/audio/adhan.wav"]
         }
       ],
       "expo-asset"
@@ -76,7 +75,7 @@
       },
       "router": {},
       "eas": {
-        "projectId": "d608bfd0-038d-4477-b97b-0d8b2cc503ea"
+        "projectId": "6a9f16e2-346b-4197-b225-b03468507569"
       }
     }
   }

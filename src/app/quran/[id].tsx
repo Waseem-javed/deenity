@@ -108,12 +108,12 @@ export default function SurahScreen() {
           <Pressable
             onPress={togglePlayback}
             disabled={!audioUrl}
-            className="h-12 w-12 items-center justify-center rounded-full bg-brand-50 dark:bg-slate-800 active:opacity-70"
+            className="h-12 w-12 items-center justify-center rounded-full bg-brand-50 dark:bg-brand-400/15 active:opacity-70"
           >
             {!surah ? (
-              <ActivityIndicator size="small" color="#1d4ed8" />
+              <ActivityIndicator size="small" color="#0f8478" />
             ) : (
-              <MaterialCommunityIcons name={status.playing ? "pause" : "play"} size={24} color="#1d4ed8" />
+              <MaterialCommunityIcons name={status.playing ? "pause" : "play"} size={24} color="#0f8478" />
             )}
           </Pressable>
         </View>
@@ -126,7 +126,7 @@ export default function SurahScreen() {
                 <Pressable
                   key={reciter.reciter_id}
                   onPress={() => selectReciter(reciter.reciter_id)}
-                  className={["mx-1 rounded-full px-3 py-1.5", selected ? "bg-brand-600" : "bg-white dark:bg-slate-900"].join(" ")}
+                  className={["mx-1 rounded-full px-3 py-1.5", selected ? "bg-brand-600" : "bg-white/70 dark:bg-white/10 border border-white/60 dark:border-white/10"].join(" ")}
                 >
                   <Text className={selected ? "text-sm font-medium text-white" : "text-sm font-medium text-slate-600 dark:text-slate-300"}>
                     {reciter.reciter}
@@ -145,14 +145,14 @@ export default function SurahScreen() {
           contentContainerClassName="px-6 pb-6 gap-3"
           ListHeaderComponent={
             surah?.bismillah_pre ? (
-              <View className="mb-1 items-center rounded-2xl bg-white dark:bg-slate-900 py-5">
+              <View className="mb-1 items-center rounded-2xl bg-white/70 dark:bg-white/10 border border-white/60 dark:border-white/10 py-5">
                 <Text className="text-2xl leading-10 text-slate-900 dark:text-white">{BISMILLAH}</Text>
               </View>
             ) : null
           }
           renderItem={({ item }) => (
-            <View className="rounded-2xl bg-white dark:bg-slate-900 p-4">
-              <View className="h-6 w-6 items-center justify-center rounded-full bg-brand-50 dark:bg-slate-800">
+            <View className="rounded-2xl bg-white/70 dark:bg-white/10 border border-white/60 dark:border-white/10 p-4">
+              <View className="h-6 w-6 items-center justify-center rounded-full bg-brand-50 dark:bg-brand-400/15">
                 <Text className="text-xs font-semibold text-brand-600 dark:text-brand-400">{item.ayah}</Text>
               </View>
               <Text className="mt-2 text-right text-xl leading-9 text-slate-900 dark:text-white">{item.arabic}</Text>

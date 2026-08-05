@@ -14,7 +14,7 @@ const FEATURES = [
   {
     href: "/tajweed" as const,
     title: "Quran Tajweed",
-    subtitle: "16-line Colorfull Tajweed",
+    subtitle: "16-line Colorfull",
     icon: "book-open-page-variant-outline",
     tone: "brand",
   },
@@ -35,7 +35,7 @@ const FEATURES = [
   {
     href: "/duas" as const,
     title: "Duas",
-    subtitle: "Everyday supplications",
+    subtitle: "Daily supplications",
     icon: "hands-pray",
     tone: "rose",
   },
@@ -92,8 +92,8 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View className="flex-row flex-wrap justify-between gap-y-4">
-          {FEATURES.map((feature) => (
-            <FeatureCard key={feature.href} {...feature} />
+          {FEATURES.map((feature, index) => (
+            <FeatureCard key={feature.href} {...feature} index={index} />
           ))}
         </View>
       </ScrollView>

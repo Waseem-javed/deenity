@@ -51,7 +51,7 @@ export default function NamesScreen() {
           keyExtractor={(item, index) => String(item.id ?? index)}
           contentContainerClassName="px-6 pb-6 gap-2"
           renderItem={({ item }) => (
-            <View className="rounded-2xl bg-white dark:bg-slate-900 p-4">
+            <View className="rounded-2xl bg-white/70 dark:bg-white/10 border border-white/60 dark:border-white/10 p-4">
               <View className="flex-row items-center justify-between">
                 <Text className="text-base font-semibold text-slate-900 dark:text-white">{item.name}</Text>
                 <Text className="text-lg text-slate-700 dark:text-slate-300">{item.arabic}</Text>

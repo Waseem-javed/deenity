@@ -46,7 +46,7 @@ export default function AsmaScreen() {
           columnWrapperClassName="justify-between"
           contentContainerClassName="px-6 pt-4 pb-6 gap-3"
           renderItem={({ item, index }) => (
-            <View className="mb-3 w-[48%] rounded-2xl bg-white dark:bg-slate-900 p-4">
+            <View className="mb-3 w-[48%] rounded-2xl bg-white/70 dark:bg-white/10 border border-white/60 dark:border-white/10 p-4">
               <Text className="text-xs font-medium text-brand-600 dark:text-brand-400">{item.number ?? index + 1}</Text>
               <Text className="mt-2 text-right text-2xl text-slate-900 dark:text-white">{item.arabic}</Text>
               <Text className="mt-2 text-sm font-medium text-slate-900 dark:text-white">{item.transliteration}</Text>

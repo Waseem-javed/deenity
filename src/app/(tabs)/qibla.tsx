@@ -83,17 +83,21 @@ export default function QiblaScreen() {
         <View className="mt-10 items-center justify-center">
           <View
             className={[
-              "h-48 w-48 items-center justify-center rounded-full bg-white dark:bg-slate-900 border-2",
-              aligned ? "border-emerald-500" : "border-transparent",
+              "h-48 w-48 items-center justify-center rounded-full bg-white/70 dark:bg-white/10 border-2",
+              aligned ? "border-emerald-500" : "border-white/60 dark:border-white/10",
             ].join(" ")}
-            style={{ shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.08, shadowRadius: 16, elevation: 2 }}
+            style={
+              aligned
+                ? { shadowColor: "#10b981", shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.4, shadowRadius: 16, elevation: 4 }
+                : { shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.08, shadowRadius: 16, elevation: 2 }
+            }
           >
             {CARDINALS.map((cardinal) => (
               <CardinalLabel key={cardinal.label} label={cardinal.label} angle={cardinal.angle} dialRotation={dialRotation} />
             ))}
 
             <Animated.View style={animatedStyle}>
-              <MaterialCommunityIcons name="navigation" size={64} color={aligned ? "#10b981" : "#1d4ed8"} />
+              <MaterialCommunityIcons name="navigation" size={64} color={aligned ? "#10b981" : "#0f8478"} />
             </Animated.View>
           </View>
           <Text className="mt-6 text-2xl font-semibold text-slate-900 dark:text-white">

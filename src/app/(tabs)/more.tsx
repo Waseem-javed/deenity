@@ -58,7 +58,7 @@ export default function MoreScreen() {
           <Text className="mt-1 text-base text-slate-600 dark:text-slate-300">Preferences & about</Text>
         </View>
 
-        <View className="rounded-2xl bg-white dark:bg-slate-900 p-4">
+        <View className="rounded-2xl bg-white/70 dark:bg-white/10 border border-white/60 dark:border-white/10 p-4">
           <Text className="text-base font-semibold text-slate-900 dark:text-white">Asr calculation (madhab)</Text>
           <Text className="mt-1 text-sm text-slate-500 dark:text-slate-400">Affects when Asr prayer time is shown.</Text>
           <SegmentedButtons
@@ -72,7 +72,7 @@ export default function MoreScreen() {
           />
         </View>
 
-        <View className="rounded-2xl bg-white dark:bg-slate-900 p-4">
+        <View className="rounded-2xl bg-white/70 dark:bg-white/10 border border-white/60 dark:border-white/10 p-4">
           <View className="flex-row items-center justify-between">
             <View className="flex-1 pr-3">
               <Text className="text-base font-semibold text-slate-900 dark:text-white">Silent Adhan</Text>
@@ -84,7 +84,7 @@ export default function MoreScreen() {
           </View>
         </View>
 
-        <View className="rounded-2xl bg-white dark:bg-slate-900 p-4">
+        <View className="rounded-2xl bg-white/70 dark:bg-white/10 border border-white/60 dark:border-white/10 p-4">
           <View className="flex-row items-center justify-between">
             <View className="flex-1 pr-3">
               <Text className="text-base font-semibold text-slate-900 dark:text-white">Dark Mode</Text>
@@ -94,7 +94,7 @@ export default function MoreScreen() {
           </View>
         </View>
 
-        <View className="rounded-2xl bg-white dark:bg-slate-900 p-4">
+        <View className="rounded-2xl bg-white/70 dark:bg-white/10 border border-white/60 dark:border-white/10 p-4">
           <Text className="text-base font-semibold text-slate-900 dark:text-white">Deenity</Text>
           <Text className="mt-1 text-sm text-slate-500 dark:text-slate-400">Version 1.0.0</Text>
           <Button mode="outlined" onPress={replayOnboarding} style={{ marginTop: 12 }} icon="restart">

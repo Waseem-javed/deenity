@@ -43,7 +43,7 @@ export default function HadithScreen() {
           contentContainerClassName="px-6 pt-4 pb-6 gap-3"
           ListHeaderComponent={
             random ? (
-              <View className="mb-3 rounded-2xl bg-brand-50 dark:bg-slate-800 p-4">
+              <View className="mb-3 rounded-2xl bg-brand-50 dark:bg-brand-400/10 p-4">
                 <Text className="text-xs font-medium text-brand-600 dark:text-brand-400">Hadith of the moment · {random.collection_name}</Text>
                 <Text className="mt-2 text-right text-lg leading-8 text-slate-900 dark:text-white">{random.arabic}</Text>
                 <Text className="mt-2 text-sm leading-6 text-slate-700 dark:text-slate-300">{random.english}</Text>
@@ -53,7 +53,7 @@ export default function HadithScreen() {
           }
           renderItem={({ item }) => (
             <Link href={`/hadith/${item.key}`} asChild>
-              <Pressable className="flex-row items-center justify-between rounded-2xl bg-white dark:bg-slate-900 p-4 active:opacity-70">
+              <Pressable className="flex-row items-center justify-between rounded-2xl bg-white/70 dark:bg-white/10 border border-white/60 dark:border-white/10 p-4 active:opacity-70">
                 <View className="flex-1 pr-3">
                   <Text className="text-base font-semibold text-slate-900 dark:text-white">{item.name}</Text>
                   <Text className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">
